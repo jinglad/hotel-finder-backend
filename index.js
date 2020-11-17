@@ -13,12 +13,22 @@ app.use(bodyParser.json());
 const uri =
   "mongodb+srv://houseFinder:HouseFinder38@cluster0.vpsgc.mongodb.net/houseFinder?retryWrites=true&w=majority";
 
+app.get("/", (req, res) => {
+  res.send("Hotel Finder");
+});
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 client.connect((err) => {
   const rentCollection = client.db("houseFinder").collection("rentCollection");
+
+  app.get("/fullBookingList", (req, res) => {
+    rentCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
+  });
 });
 
 const port = 5000;
